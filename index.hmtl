@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Navigator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        #inputField {
+            padding: 10px;
+            font-size: 18px;
+            width: 300px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #333333;
+            border-radius: 4px;
+        }
+        #inputField::placeholder {
+            color: #888888;
+        }
+        #hint {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+        #commandList {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <input list="commandsList" id="inputField" placeholder="Type something..." autofocus>
+    <datalist id="commandsList">
+        <!-- Command options will be populated here -->
+    </datalist>
+    <div id="hint">
+        Type a command and press Enter.
+    </div>
+    <div id="commandList">
+        <ul id="commands">
+            <!-- Command list will be populated here -->
+        </ul>
+    </div>
+
+    <script>
+        const actions = [
+           
+
+ { command: 'testlink', type: 'link', value: 'https://example.com'},
+
+
+ { command: 'testcopy', type: 'copy', value: 'example.com'},
+
+
+
+
+       
+        ];
+
+
+        const dataList = document.getElementById('commandsList');
+        const commandList = document.getElementById('commands');
+
+        // Populate the datalist and the command list in reverse order
+        actions.slice().reverse().forEach(action => {
+            const option = document.createElement('option');
+            option.value = action.command;
+            dataList.appendChild(option);
+
+            const listItem = document.createElement('li');
+            listItem.textContent = `Type "${action.command}" to ${action.type === 'link' ? 'open a link' : 'copy text to clipboard'}`;
+            commandList.appendChild(listItem);
+        });
+
+        document.getElementById('inputField').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                let inputValue = event.target.value.toLowerCase();
+                let action = actions.find(action => action.command === inputValue);
+
+                if (action) {
+                    if (action.type === 'link') {
+                        window.open(action.value, '_blank');
+                    } else if (action.type === 'copy') {
+                        copyToClipboard(action.value);
+                    }
+                } else {
+                    alert('Unknown command: ' + inputValue);
+                }
+            }
+        });
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Copied to clipboard: ' + text);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
